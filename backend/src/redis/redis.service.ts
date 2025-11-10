@@ -9,11 +9,26 @@ export class RedisService {
     const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
     // Parse URL to avoid IPv6 issues
     const url = new URL(redisUrl);
+    const hostname = url.hostname;
+    
+    // Force IPv4 for Docker network
+    let host = hostname;
+    if (hostname === 'redis' || hostname === 'localhost' || hostname === '::1' || hostname === '[::1]') {
+      host = hostname === 'redis' ? 'redis' : '127.0.0.1';
+    }
+    
     this.client = new Redis({
-      host: url.hostname,
+      host,
       port: parseInt(url.port) || 6379,
+      family: 4, // Force IPv4
       enableReadyCheck: false,
       maxRetriesPerRequest: null,
+      lazyConnect: true, // Don't connect immediately
+    });
+    
+    // Connect with error handling
+    this.client.connect().catch((err) => {
+      console.warn('Redis connection warning:', err.message);
     });
   }
 

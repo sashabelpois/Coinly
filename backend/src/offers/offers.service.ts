@@ -35,8 +35,24 @@ export class OffersService {
     const rewardUserEur = data.payoutEur * 0.75; // 75% to user
     const rewardCoins = Math.floor(rewardUserEur * 1000); // 1000 coins = 1€
 
-    return this.prisma.offer.create({
-      data: {
+    // Use upsert to avoid duplicates
+    return this.prisma.offer.upsert({
+      where: {
+        provider_externalId: {
+          provider: data.provider,
+          externalId: data.externalId,
+        },
+      },
+      update: {
+        title: data.title,
+        description: data.description,
+        type: data.type,
+        payoutEur: data.payoutEur,
+        rewardUserEur,
+        rewardCoins,
+        isActive: true,
+      },
+      create: {
         ...data,
         rewardUserEur,
         rewardCoins,

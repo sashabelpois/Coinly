@@ -8,6 +8,10 @@ import api from '@/lib/api'
 import { toast } from 'sonner'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { WalletModal } from '@/components/earn/WalletModal'
+import { OfferCard } from '@/components/earn/OfferCard'
+import { RewardedVideo } from '@/components/earn/RewardedVideo'
+import { CpxOfferwall } from '@/components/earn/CpxOfferwall'
+import { SyncOffersButton } from '@/components/earn/SyncOffersButton'
 
 interface Offer {
   id: string
@@ -30,8 +34,10 @@ export default function EarnPage() {
   const [balance, setBalance] = useState(0)
   const [activeSection, setActiveSection] = useState('featured')
   const [walletOpen, setWalletOpen] = useState(false)
+  const [cpxOfferwallOpen, setCpxOfferwallOpen] = useState(false)
   const [sortBy, setSortBy] = useState<'reward' | 'rating' | 'duration'>('reward')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [userData, setUserData] = useState<{ id: string; name?: string; email?: string } | null>(null)
 
   useEffect(() => {
     const section = searchParams.get('section') || 'featured'
@@ -47,6 +53,29 @@ export default function EarnPage() {
       return
     }
 
+    // Load user data for CPX
+    if (mockUser) {
+      const user = JSON.parse(mockUser)
+      setUserData({
+        id: user.id || 'dev-user-123',
+        name: user.name,
+        email: user.email,
+      })
+    } else {
+      // Load from API
+      api.get('/users/profile')
+        .then(({ data }) => {
+          setUserData({
+            id: data.id,
+            name: data.name,
+            email: data.email,
+          })
+        })
+        .catch(() => {
+          // Ignore errors
+        })
+    }
+
     loadData()
   }, [router])
 
@@ -57,7 +86,26 @@ export default function EarnPage() {
         const user = JSON.parse(mockUser)
         setBalance(user.balanceCoins || 10000)
         
-        // Mock data
+        // Try to load real offers first, fallback to mock if fails
+        try {
+          const [offersRes, balanceRes] = await Promise.all([
+            api.get('/offers'),
+            api.get('/wallet/balance'),
+          ])
+          const allOffers = offersRes.data || []
+          if (allOffers.length > 0) {
+            setOffers(allOffers)
+            setGames(allOffers.filter((o: Offer) => o.type === 'game' || o.type === 'offer'))
+            setSurveys(allOffers.filter((o: Offer) => o.type === 'survey'))
+            setBalance(balanceRes.data?.balanceCoins || user.balanceCoins || 10000)
+            setLoading(false)
+            return
+          }
+        } catch (apiError) {
+          // Fall through to mock data
+        }
+        
+        // Mock data fallback
         const mockOffers: Offer[] = [
           { id: '1', title: 'Sondage Test', description: 'Sondage de développement', type: 'survey', rewardCoins: 500, provider: 'Test', rating: 4.5, duration: 5 },
           { id: '2', title: 'Jeu Mobile', description: 'Téléchargez et jouez', type: 'game', rewardCoins: 1000, provider: 'Test', rating: 4.8, duration: 10 },
@@ -74,16 +122,21 @@ export default function EarnPage() {
         api.get('/offers'),
         api.get('/wallet/balance'),
       ])
-      const allOffers = offersRes.data
+      const allOffers = offersRes.data || []
       setOffers(allOffers)
       setGames(allOffers.filter((o: Offer) => o.type === 'game' || o.type === 'offer'))
       setSurveys(allOffers.filter((o: Offer) => o.type === 'survey'))
-      setBalance(balanceRes.data.balanceCoins)
+      setBalance(balanceRes.data.balanceCoins || 0)
     } catch (error: any) {
       if (error.response?.status === 401) {
         router.push('/auth/login')
       } else {
-        toast.error('Erreur lors du chargement')
+        console.error('Error loading offers:', error)
+        toast.error('Erreur lors du chargement des offres')
+        // Set empty arrays on error
+        setOffers([])
+        setGames([])
+        setSurveys([])
       }
     } finally {
       setLoading(false)
@@ -151,12 +204,15 @@ export default function EarnPage() {
                   <h1 className="text-3xl font-bold mb-2 text-white">Gagner des coins</h1>
                   <p className="text-gray-400">Complétez des offres pour gagner de l'argent</p>
                 </div>
-                <div className="text-right">
-                  <div className="flex items-center gap-2 text-2xl font-bold text-primary-400">
-                    <Coins className="w-8 h-8" />
-                    {balance.toLocaleString()} coins
+                <div className="flex items-center gap-4">
+                  <SyncOffersButton onSyncComplete={loadData} />
+                  <div className="text-right">
+                    <div className="flex items-center gap-2 text-2xl font-bold text-primary-400">
+                      <Coins className="w-8 h-8" />
+                      {balance.toLocaleString()} coins
+                    </div>
+                    <p className="text-sm text-gray-400">≈ {(balance / 1000).toFixed(2)}€</p>
                   </div>
-                  <p className="text-sm text-gray-400">≈ {(balance / 1000).toFixed(2)}€</p>
                 </div>
               </div>
             </div>
@@ -167,65 +223,63 @@ export default function EarnPage() {
                 {/* Featured Games */}
                 <div>
                   <h2 className="text-2xl font-bold text-white mb-4">Featured Games</h2>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {games.slice(0, 3).map((offer) => (
-                      <div key={offer.id} className="bg-slate-800 rounded-3xl p-6 shadow-lg hover:bg-slate-700 transition-colors">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="p-3 bg-primary-600/20 rounded-2xl text-primary-400">
-                              {getIcon(offer.type)}
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-lg text-white">{offer.title}</h3>
-                              <p className="text-sm text-gray-400">{offer.provider}</p>
-                            </div>
-                          </div>
-                        </div>
-                        {offer.description && (
-                          <p className="text-gray-400 mb-4 text-sm">{offer.description}</p>
-                        )}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-primary-400 font-bold">
-                            <Coins className="w-5 h-5" />
-                            +{offer.rewardCoins.toLocaleString()} coins
-                          </div>
-                          <Button size="sm" className="bg-primary-600 hover:bg-primary-700">Commencer</Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  {games.length > 0 ? (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {games.slice(0, 3).map((offer) => (
+                        <OfferCard
+                          key={offer.id}
+                          offer={offer}
+                          onBalanceUpdate={loadData}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-slate-800 rounded-3xl p-8 text-center">
+                      <p className="text-gray-400 mb-4">Aucun jeu disponible pour le moment</p>
+                      <p className="text-sm text-gray-500 mb-4">Synchronisez les offres pour voir les jeux disponibles</p>
+                      <SyncOffersButton onSyncComplete={loadData} />
+                    </div>
+                  )}
                 </div>
 
                 {/* Featured Surveys */}
                 <div>
-                  <h2 className="text-2xl font-bold text-white mb-4">Featured Survey</h2>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {surveys.slice(0, 3).map((offer) => (
-                      <div key={offer.id} className="bg-slate-800 rounded-3xl p-6 shadow-lg hover:bg-slate-700 transition-colors">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="p-3 bg-primary-600/20 rounded-2xl text-primary-400">
-                              {getIcon(offer.type)}
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-lg text-white">{offer.title}</h3>
-                              <p className="text-sm text-gray-400">{offer.provider}</p>
-                            </div>
-                          </div>
-                        </div>
-                        {offer.description && (
-                          <p className="text-gray-400 mb-4 text-sm">{offer.description}</p>
-                        )}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-primary-400 font-bold">
-                            <Coins className="w-5 h-5" />
-                            +{offer.rewardCoins.toLocaleString()} coins
-                          </div>
-                          <Button size="sm" className="bg-primary-600 hover:bg-primary-700">Commencer</Button>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-white">Featured Survey</h2>
+                    <Button
+                      onClick={() => setCpxOfferwallOpen(true)}
+                      className="bg-primary-600 hover:bg-primary-700"
+                    >
+                      Voir tous les sondages CPX
+                    </Button>
+                  </div>
+                  {surveys.length > 0 ? (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {surveys.slice(0, 3).map((offer) => (
+                        <OfferCard
+                          key={offer.id}
+                          offer={offer}
+                          onBalanceUpdate={loadData}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-slate-800 rounded-3xl p-8 text-center">
+                      <p className="text-gray-400 mb-4">Aucun sondage disponible pour le moment</p>
+                      <div className="flex flex-col items-center gap-4">
+                        <p className="text-sm text-gray-500">Synchronisez les offres ou accédez directement aux sondages CPX</p>
+                        <div className="flex gap-2">
+                          <SyncOffersButton onSyncComplete={loadData} />
+                          <Button
+                            onClick={() => setCpxOfferwallOpen(true)}
+                            className="bg-primary-600 hover:bg-primary-700"
+                          >
+                            Voir les sondages CPX
+                          </Button>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -254,47 +308,17 @@ export default function EarnPage() {
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {sortedOffers(games).map((offer) => (
-                    <div key={offer.id} className="bg-slate-800 rounded-3xl p-6 shadow-lg hover:bg-slate-700 transition-colors">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-3 bg-primary-600/20 rounded-2xl text-primary-400">
-                            {getIcon(offer.type)}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-lg text-white">{offer.title}</h3>
-                            <p className="text-sm text-gray-400">{offer.provider}</p>
-                          </div>
-                        </div>
-                      </div>
-                      {offer.description && (
-                        <p className="text-gray-400 mb-4 text-sm">{offer.description}</p>
-                      )}
-                      <div className="flex items-center justify-between mb-4">
-                        {offer.rating && (
-                          <div className="flex items-center gap-1 text-yellow-400">
-                            <Star className="w-4 h-4 fill-current" />
-                            <span className="text-sm">{offer.rating}</span>
-                          </div>
-                        )}
-                        {offer.duration && (
-                          <div className="flex items-center gap-1 text-gray-400">
-                            <Clock className="w-4 h-4" />
-                            <span className="text-sm">{offer.duration} min</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-primary-400 font-bold">
-                          <Coins className="w-5 h-5" />
-                          +{offer.rewardCoins.toLocaleString()} coins
-                        </div>
-                        <Button size="sm" className="bg-primary-600 hover:bg-primary-700">Commencer</Button>
-                      </div>
-                    </div>
+                    <OfferCard
+                      key={offer.id}
+                      offer={offer}
+                      onBalanceUpdate={loadData}
+                    />
                   ))}
                   {games.length === 0 && (
-                    <div className="col-span-full text-center py-12">
-                      <p className="text-gray-400">Aucun jeu disponible</p>
+                    <div className="col-span-full bg-slate-800 rounded-3xl p-8 text-center">
+                      <p className="text-gray-400 mb-4">Aucun jeu disponible</p>
+                      <p className="text-sm text-gray-500 mb-4">Synchronisez les offres pour voir les jeux disponibles</p>
+                      <SyncOffersButton onSyncComplete={loadData} />
                     </div>
                   )}
                 </div>
@@ -326,47 +350,27 @@ export default function EarnPage() {
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {sortedOffers(surveys).map((offer) => (
-                    <div key={offer.id} className="bg-slate-800 rounded-3xl p-6 shadow-lg hover:bg-slate-700 transition-colors">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-3 bg-primary-600/20 rounded-2xl text-primary-400">
-                            {getIcon(offer.type)}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-lg text-white">{offer.title}</h3>
-                            <p className="text-sm text-gray-400">{offer.provider}</p>
-                          </div>
-                        </div>
-                      </div>
-                      {offer.description && (
-                        <p className="text-gray-400 mb-4 text-sm">{offer.description}</p>
-                      )}
-                      <div className="flex items-center justify-between mb-4">
-                        {offer.rating && (
-                          <div className="flex items-center gap-1 text-yellow-400">
-                            <Star className="w-4 h-4 fill-current" />
-                            <span className="text-sm">{offer.rating}</span>
-                          </div>
-                        )}
-                        {offer.duration && (
-                          <div className="flex items-center gap-1 text-gray-400">
-                            <Clock className="w-4 h-4" />
-                            <span className="text-sm">{offer.duration} min</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-primary-400 font-bold">
-                          <Coins className="w-5 h-5" />
-                          +{offer.rewardCoins.toLocaleString()} coins
-                        </div>
-                        <Button size="sm" className="bg-primary-600 hover:bg-primary-700">Commencer</Button>
-                      </div>
-                    </div>
+                    <OfferCard
+                      key={offer.id}
+                      offer={offer}
+                      onBalanceUpdate={loadData}
+                    />
                   ))}
                   {surveys.length === 0 && (
-                    <div className="col-span-full text-center py-12">
-                      <p className="text-gray-400">Aucun sondage disponible</p>
+                    <div className="col-span-full bg-slate-800 rounded-3xl p-8 text-center">
+                      <p className="text-gray-400 mb-4">Aucun sondage disponible</p>
+                      <div className="flex flex-col items-center gap-4">
+                        <p className="text-sm text-gray-500">Synchronisez les offres ou accédez directement aux sondages CPX</p>
+                        <div className="flex gap-2">
+                          <SyncOffersButton onSyncComplete={loadData} />
+                          <Button
+                            onClick={() => setCpxOfferwallOpen(true)}
+                            className="bg-primary-600 hover:bg-primary-700"
+                          >
+                            Voir les sondages CPX
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -410,6 +414,17 @@ export default function EarnPage() {
         balance={balance}
         onBalanceUpdate={loadData}
       />
+
+      {/* CPX Offerwall */}
+      {cpxOfferwallOpen && userData && (
+        <CpxOfferwall
+          userId={userData.id}
+          username={userData.name}
+          email={userData.email}
+          onClose={() => setCpxOfferwallOpen(false)}
+          onConversion={loadData}
+        />
+      )}
     </div>
   )
 }

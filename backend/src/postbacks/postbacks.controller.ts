@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Headers, HttpCode } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Query, Headers, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PostbacksService } from './postbacks.service';
 
@@ -15,12 +15,35 @@ export class PostbacksController {
     @Body() body: any,
     @Headers('x-signature') signature?: string,
   ) {
-    // Verify signature if provided
-    if (signature && !this.postbacksService.verifySignature(provider, body, signature)) {
-      throw new Error('Invalid signature');
+    // For CPX, data comes as query parameters, not body
+    // We need to handle both GET (query params) and POST (body) requests
+    const data = Object.keys(body).length > 0 ? body : {};
+    
+    // Verify signature/hash if provided
+    // CPX uses hash parameter in the data itself
+    if (!this.postbacksService.verifySignature(provider, data, signature)) {
+      throw new Error('Invalid signature or hash');
     }
 
-    return this.postbacksService.processPostback(provider, body);
+    return this.postbacksService.processPostback(provider, data);
+  }
+
+  @Get(':provider')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Receive postback from offer provider (GET method)' })
+  async receivePostbackGet(
+    @Param('provider') provider: string,
+    @Query() query: any,
+  ) {
+    // CPX can send postbacks via GET with query parameters
+    const data = query;
+    
+    // Verify hash
+    if (!this.postbacksService.verifySignature(provider, data)) {
+      throw new Error('Invalid hash');
+    }
+
+    return this.postbacksService.processPostback(provider, data);
   }
 }
 

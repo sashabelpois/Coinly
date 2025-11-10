@@ -10,6 +10,7 @@ import { PostbacksModule } from './postbacks/postbacks.module';
 import { WithdrawalsModule } from './withdrawals/withdrawals.module';
 import { ReferralsModule } from './referrals/referrals.module';
 import { AdminModule } from './admin/admin.module';
+import { OfferwallsModule } from './offerwalls/offerwalls.module';
 import { BullModule } from '@nestjs/bullmq';
 import { RedisModule } from './redis/redis.module';
 import { WebSocketModule } from './websocket/websocket.module';
@@ -21,8 +22,9 @@ import { WebSocketModule } from './websocket/websocket.module';
     }),
     BullModule.forRoot({
       connection: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
+        host: process.env.REDIS_HOST || (process.env.REDIS_URL ? new URL(process.env.REDIS_URL).hostname : 'redis'),
+        port: parseInt(process.env.REDIS_PORT || (process.env.REDIS_URL ? new URL(process.env.REDIS_URL).port : '6379')),
+        family: 4, // Force IPv4
       },
     }),
     PrismaModule,
@@ -36,6 +38,7 @@ import { WebSocketModule } from './websocket/websocket.module';
     WithdrawalsModule,
     ReferralsModule,
     AdminModule,
+    OfferwallsModule,
     WebSocketModule,
   ],
 })

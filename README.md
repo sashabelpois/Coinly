@@ -85,6 +85,8 @@ earnapp/
 - shadcn/ui
 - React Query
 - Recharts
+- Sonner (notifications)
+- Axios
 
 ### Backend
 - NestJS
@@ -94,10 +96,41 @@ earnapp/
 - JWT Auth
 - WebSocket
 - Swagger
+- @nestjs/axios
+
+## ✨ Fonctionnalités
+
+### Intégration Offerwalls
+- **CPX Research** : Intégration complète avec iframe et postbacks
+- **AdGate Media** : Prêt pour intégration
+- **AyeT-Studios** : Prêt pour intégration
+- **Lootably** : Prêt pour intégration
+
+### Pages principales
+- **Page d'accueil** : Landing page moderne avec design dark
+- **Page Earn** : Navigation avec sidebar, sections Featured Games/Survey, tri et filtres
+- **Wallet** : Modal avec balance, retraits et historique des transactions
+- **Profil utilisateur** : Gestion du compte
+- **Système de parrainage** : Programme de références
+
+### Authentification
+- NextAuth.js avec Credentials Provider
+- JWT tokens
+- Mode développement avec mock login
 
 ## 🔐 Variables d'environnement
 
-Voir `.env.example` dans chaque dossier (frontend/backend)
+Voir [ENV_SETUP.md](./ENV_SETUP.md) pour la configuration complète des variables d'environnement.
+
+### Variables principales
+- `CPX_APP_ID` : ID de l'application CPX Research
+- `CPX_SECURE_HASH` : Hash de sécurité pour les postbacks CPX
+- `DATABASE_URL` : URL de connexion PostgreSQL
+- `REDIS_URL` : URL de connexion Redis
+- `JWT_SECRET` : Secret pour les tokens JWT
+- `NEXTAUTH_SECRET` : Secret pour NextAuth.js
+
+📖 **Configuration CPX** : Voir [CPX_POSTBACK_SETUP.md](./CPX_POSTBACK_SETUP.md) pour configurer les postbacks CPX Research
 
 ## 📝 Pousser sur GitHub
 
