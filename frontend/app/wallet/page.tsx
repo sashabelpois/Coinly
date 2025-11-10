@@ -17,7 +17,10 @@ export default function WalletPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (!token) {
+    const mockUser = localStorage.getItem('mock_user')
+    
+    // Permettre l'accès si connecté ou en mode mock
+    if (!token && !mockUser) {
       router.push('/auth/login')
       return
     }
@@ -27,6 +30,16 @@ export default function WalletPage() {
 
   const loadData = async () => {
     try {
+      // Vérifier si on est en mode mock
+      const mockUser = localStorage.getItem('mock_user')
+      if (mockUser) {
+        const user = JSON.parse(mockUser)
+        setBalance(user.balanceCoins || 10000)
+        setTransactions([])
+        setLoading(false)
+        return
+      }
+
       const [balanceRes, transactionsRes] = await Promise.all([
         api.get('/wallet/balance'),
         api.get('/wallet/transactions'),
@@ -72,41 +85,41 @@ export default function WalletPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-purple-50 to-primary-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="container mx-auto px-4 py-8">
         {/* Balance Card */}
-        <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg">
+        <div className="bg-slate-800 rounded-3xl p-8 mb-8 shadow-lg">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-3 text-4xl font-bold text-primary-600 mb-2">
+            <div className="flex items-center justify-center gap-3 text-4xl font-bold text-primary-400 mb-2">
               <Coins className="w-10 h-10" />
               {balance.toLocaleString()} coins
             </div>
-            <p className="text-2xl text-gray-600">≈ {(balance / 1000).toFixed(2)}€</p>
+            <p className="text-2xl text-gray-300">≈ {(balance / 1000).toFixed(2)}€</p>
           </div>
         </div>
 
         {/* Withdrawal */}
-        <div className="bg-white rounded-2xl p-6 mb-8 shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Retirer</h2>
+        <div className="bg-slate-800 rounded-3xl p-6 mb-8 shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-white">Retirer</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Montant (€)</label>
+              <label className="block text-sm font-medium mb-2 text-gray-300">Montant (€)</label>
               <input
                 type="number"
                 value={withdrawAmount}
                 onChange={(e) => setWithdrawAmount(parseFloat(e.target.value) || 0)}
-                className="w-full px-4 py-2 border rounded-xl"
+                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 min={2}
                 max={10}
                 step={0.01}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Méthode</label>
+              <label className="block text-sm font-medium mb-2 text-gray-300">Méthode</label>
               <select
                 value={withdrawMethod}
                 onChange={(e) => setWithdrawMethod(e.target.value)}
-                className="w-full px-4 py-2 border rounded-xl"
+                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="paypal">PayPal</option>
                 <option value="revolut">Revolut</option>
@@ -120,31 +133,31 @@ export default function WalletPage() {
         </div>
 
         {/* Transactions */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Historique</h2>
+        <div className="bg-slate-800 rounded-3xl p-6 shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-white">Historique</h2>
           <div className="space-y-3">
             {transactions.map((tx) => (
-              <div key={tx.id} className="flex items-center justify-between p-4 border rounded-xl">
+              <div key={tx.id} className="flex items-center justify-between p-4 bg-slate-700 border border-slate-600 rounded-xl">
                 <div className="flex items-center gap-3">
                   {tx.amountCoins > 0 ? (
-                    <ArrowDownRight className="w-5 h-5 text-green-600" />
+                    <ArrowDownRight className="w-5 h-5 text-green-400" />
                   ) : (
-                    <ArrowUpRight className="w-5 h-5 text-red-600" />
+                    <ArrowUpRight className="w-5 h-5 text-red-400" />
                   )}
                   <div>
-                    <p className="font-medium">{tx.description || tx.type}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-medium text-white">{tx.description || tx.type}</p>
+                    <p className="text-sm text-gray-400">
                       {new Date(tx.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
-                <div className={`font-bold ${tx.amountCoins > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className={`font-bold ${tx.amountCoins > 0 ? 'text-green-400' : 'text-red-400'}`}>
                   {tx.amountCoins > 0 ? '+' : ''}{tx.amountCoins.toLocaleString()} coins
                 </div>
               </div>
             ))}
             {transactions.length === 0 && (
-              <p className="text-center text-gray-500 py-8">Aucune transaction</p>
+              <p className="text-center text-gray-400 py-8">Aucune transaction</p>
             )}
           </div>
         </div>

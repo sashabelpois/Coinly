@@ -34,7 +34,7 @@ echo.
 
 REM Créer le commit
 echo [3/5] Creation du commit...
-git commit -m "Initial commit: HeyCash+ platform - Complete MVP with Next.js frontend and NestJS backend"
+git commit -m "Initial commit: Coinly platform - Complete MVP with Next.js frontend and NestJS backend"
 if errorlevel 1 (
     echo [ATTENTION] Aucun changement a commiter ou commit deja cree
 ) else (

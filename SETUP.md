@@ -1,4 +1,4 @@
-# HeyCash+ - Guide de démarrage
+# Coinly - Guide de démarrage
 
 ## 🚀 Installation rapide
 
@@ -42,7 +42,7 @@ Dans un nouveau terminal :
 
 ```bash
 # Accéder au conteneur backend
-docker exec -it heycash_backend sh
+docker exec -it coinly_backend sh
 
 # Générer Prisma Client
 npm run prisma:generate

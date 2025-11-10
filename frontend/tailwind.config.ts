@@ -33,9 +33,15 @@ const config: Config = {
           800: '#6b21a8',
           900: '#581c87',
         },
+        dark: {
+          bg: '#0f172a',
+          card: '#1e293b',
+          cardHover: '#334155',
+        },
       },
       borderRadius: {
         '2xl': '1rem',
+        '3xl': '1.5rem',
       },
     },
   },

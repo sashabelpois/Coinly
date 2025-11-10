@@ -5,7 +5,7 @@ echo ========================================
 echo.
 
 REM Vérifier que le conteneur backend est en cours d'exécution
-docker ps | findstr "heycash_backend" >nul
+docker ps | findstr "coinly_backend" >nul
 if errorlevel 1 (
     echo [ERREUR] Le conteneur backend n'est pas en cours d'execution
     echo.
@@ -18,7 +18,7 @@ echo [OK] Conteneur backend detecte
 echo.
 
 echo [1/3] Generation de Prisma Client...
-docker exec -it heycash_backend npm run prisma:generate
+docker exec -it coinly_backend npm run prisma:generate
 if errorlevel 1 (
     echo [ERREUR] Echec de la generation Prisma
     pause
@@ -27,7 +27,7 @@ if errorlevel 1 (
 echo.
 
 echo [2/3] Creation des migrations...
-docker exec -it heycash_backend npm run prisma:migrate
+docker exec -it coinly_backend npm run prisma:migrate
 if errorlevel 1 (
     echo [ERREUR] Echec des migrations
     pause
@@ -36,7 +36,7 @@ if errorlevel 1 (
 echo.
 
 echo [3/3] Seed de la base de donnees (optionnel)...
-docker exec -it heycash_backend npm run prisma:seed
+docker exec -it coinly_backend npm run prisma:seed
 if errorlevel 1 (
     echo [ATTENTION] Le seed a echoue (peut etre normal si deja execute)
 ) else (

@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo Lancement de HeyCash+ en local
+echo Lancement de Coinly en local
 echo ========================================
 echo.
 

@@ -35,7 +35,7 @@ git add .
 
 # Créer le commit
 Write-Host "💾 Création du commit..." -ForegroundColor Cyan
-$commitMessage = "Initial commit: HeyCash+ platform - Complete MVP with Next.js frontend and NestJS backend"
+$commitMessage = "Initial commit: Coinly platform - Complete MVP with Next.js frontend and NestJS backend"
 git commit -m $commitMessage
 
 # Configurer le remote

@@ -3,24 +3,24 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: heycash_postgres
+    container_name: coinly_postgres
     environment:
-      POSTGRES_USER: heycash
-      POSTGRES_PASSWORD: heycash_password
-      POSTGRES_DB: heycash_db
+      POSTGRES_USER: coinly
+      POSTGRES_PASSWORD: coinly_password
+      POSTGRES_DB: coinly_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U heycash"]
+      test: ["CMD-SHELL", "pg_isready -U coinly"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: heycash_redis
+    container_name: coinly_redis
     ports:
       - "6379:6379"
     volumes:
@@ -35,11 +35,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: heycash_backend
+    container_name: coinly_backend
     ports:
       - "3001:3001"
     environment:
-      - DATABASE_URL=postgresql://heycash:heycash_password@postgres:5432/heycash_db
+      - DATABASE_URL=postgresql://coinly:coinly_password@postgres:5432/coinly_db
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
       - NODE_ENV=development
@@ -57,7 +57,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: heycash_frontend
+    container_name: coinly_frontend
     ports:
       - "3000:3000"
     environment:

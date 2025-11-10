@@ -16,7 +16,7 @@ git init
 git add .
 
 # Créer le premier commit
-git commit -m "Initial commit: HeyCash+ platform - Complete MVP with Next.js frontend and NestJS backend"
+git commit -m "Initial commit: Coinly platform - Complete MVP with Next.js frontend and NestJS backend"
 
 # Ajouter le remote GitHub (remplacez YOUR_USERNAME et YOUR_REPO par vos valeurs)
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git

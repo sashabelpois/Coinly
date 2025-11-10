@@ -30,7 +30,7 @@ copy .env.example .env
 
 Puis éditez `backend/.env` avec ces valeurs minimales :
 ```env
-DATABASE_URL=postgresql://heycash:heycash_password@postgres:5432/heycash_db
+DATABASE_URL=postgresql://coinly:coinly_password@postgres:5432/coinly_db
 REDIS_URL=redis://redis:6379
 JWT_SECRET=changez-moi-en-production-avec-une-cle-secrete-longue
 JWT_EXPIRES_IN=7d
@@ -73,7 +73,7 @@ Dans un **nouveau terminal** (gardez Docker en cours d'exécution) :
 
 ```cmd
 # Accéder au conteneur backend
-docker exec -it heycash_backend sh
+docker exec -it coinly_backend sh
 
 # Générer Prisma Client
 npm run prisma:generate
@@ -150,7 +150,7 @@ copy .env.example .env
 
 Éditez `backend/.env` :
 ```env
-DATABASE_URL=postgresql://postgres:VOTRE_MOT_DE_PASSE@localhost:5432/heycash_db
+DATABASE_URL=postgresql://postgres:VOTRE_MOT_DE_PASSE@localhost:5432/coinly_db
 REDIS_URL=redis://localhost:6379
 # ou pour Redis Cloud : redis://default:password@redis-cloud-url:port
 JWT_SECRET=changez-moi-en-production
@@ -165,7 +165,7 @@ FRONTEND_URL=http://localhost:3000
 npm run prisma:generate
 
 # Créer la base de données (dans PostgreSQL)
-# Créez une base de données nommée "heycash_db"
+# Créez une base de données nommée "coinly_db"
 
 # Créer les tables
 npm run prisma:migrate
@@ -225,7 +225,7 @@ Le frontend sera sur : http://localhost:3000
 
 ### Erreur : "Prisma Client not generated"
 ```cmd
-docker exec -it heycash_backend sh
+docker exec -it coinly_backend sh
 npm run prisma:generate
 ```
 

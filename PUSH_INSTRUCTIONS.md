@@ -38,7 +38,7 @@ git config --global user.email "votre-email@example.com"
 git add .
 
 # 4. Créer le commit
-git commit -m "Initial commit: HeyCash+ platform - Complete MVP"
+git commit -m "Initial commit: Coinly platform - Complete MVP"
 
 # 5. Ajouter le remote GitHub
 git remote add origin https://github.com/sashabelpois/Coinly.git

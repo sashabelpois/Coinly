@@ -26,8 +26,8 @@ async function bootstrap() {
 
   // Swagger
   const config = new DocumentBuilder()
-    .setTitle('HeyCash+ API')
-    .setDescription('API documentation for HeyCash+ platform')
+    .setTitle('Coinly API')
+    .setDescription('API documentation for Coinly platform')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

@@ -1,4 +1,4 @@
-# HeyCash+ / CoinPlay
+# Coinly
 
 Plateforme moderne et ludique permettant aux utilisateurs de gagner de l'argent réel en ligne via des actions rémunérées et des mini-jeux.
 
@@ -33,7 +33,7 @@ Plateforme moderne et ludique permettant aux utilisateurs de gagner de l'argent 
 
 3. **Initialiser la base de données** (nouveau terminal) :
    ```bash
-   docker exec -it heycash_backend sh
+   docker exec -it coinly_backend sh
    npm run prisma:generate
    npm run prisma:migrate
    npm run prisma:seed
@@ -116,7 +116,7 @@ Voir `.env.example` dans chaque dossier (frontend/backend)
 ```bash
 git init
 git add .
-git commit -m "Initial commit: HeyCash+ platform"
+git commit -m "Initial commit: Coinly platform"
 git remote add origin https://github.com/sashabelpois/Coinly.git
 git branch -M main
 git push -u origin main

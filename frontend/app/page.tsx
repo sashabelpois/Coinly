@@ -1,88 +1,149 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Coins, TrendingUp, Gamepad2, Gift } from 'lucide-react'
+import { Coins, TrendingUp, Gamepad2, Gift, FileText, Video, CheckCircle, Puzzle } from 'lucide-react'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-purple-50 to-primary-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Coins className="w-8 h-8 text-primary-600" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
-              HeyCash+
+            <Coins className="w-8 h-8 text-primary-400" />
+            <span className="text-2xl font-bold text-white">
+              Coinly
             </span>
+          </div>
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/earn" className="text-white hover:text-primary-400 transition-colors">
+              Earn
+            </Link>
+            <Link href="/games" className="text-white hover:text-primary-400 transition-colors">
+              Games
+            </Link>
+            <Link href="/wallet" className="text-white hover:text-primary-400 transition-colors">
+              Wallet
+            </Link>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/auth/login">
-              <Button variant="ghost">Connexion</Button>
+              <Button variant="ghost" className="text-white hover:bg-slate-800">
+                Log in
+              </Button>
             </Link>
             <Link href="/auth/register">
-              <Button>Inscription</Button>
+              <Button className="bg-primary-600 hover:bg-primary-700 text-white">
+                Get Started
+              </Button>
             </Link>
           </div>
         </nav>
       </header>
 
-      {/* Hero */}
-      <main className="container mx-auto px-4 py-20">
-        <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
-            Gagnez de l'argent réel en ligne
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Sondages, offres sponsorisées, vidéos et mini-jeux. 
-            Convertissez vos coins en argent réel ou jouez-les pour en gagner plus !
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/auth/register">
-              <Button size="lg" className="text-lg px-8 py-6">
-                Commencer gratuitement
-              </Button>
-            </Link>
-            <Link href="/earn">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
-                Voir les offres
-              </Button>
-            </Link>
-          </div>
-        </div>
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left Side - Hero Section */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">
+                Earn Money Online
+              </h1>
+              <p className="text-xl text-gray-300 max-w-2xl">
+                Make money by completing surveys, watching videos, playing games, and more.
+              </p>
+              <Link href="/auth/register">
+                <Button size="lg" className="bg-primary-600 hover:bg-primary-700 text-white text-lg px-8 py-6 rounded-2xl">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
 
-        {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 mt-20">
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <TrendingUp className="w-12 h-12 text-primary-600 mb-4" />
-            <h3 className="text-xl font-bold mb-2">Gagnez facilement</h3>
-            <p className="text-gray-600">
-              Répondez à des sondages, complétez des offres et regardez des vidéos pour gagner des coins.
-            </p>
+            {/* Feature Cards Grid */}
+            <div className="grid md:grid-cols-2 gap-6 mt-12">
+              <div className="bg-slate-800 rounded-3xl p-6 hover:bg-slate-700 transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-primary-600/20 rounded-2xl">
+                    <FileText className="w-6 h-6 text-primary-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Surveys</h3>
+                    <p className="text-gray-400">Get paid for sharing your opinion</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-800 rounded-3xl p-6 hover:bg-slate-700 transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-primary-600/20 rounded-2xl">
+                    <Video className="w-6 h-6 text-primary-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Videos</h3>
+                    <p className="text-gray-400">Watch videos and receive rewards</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-800 rounded-3xl p-6 hover:bg-slate-700 transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-primary-600/20 rounded-2xl">
+                    <CheckCircle className="w-6 h-6 text-primary-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Offers</h3>
+                    <p className="text-gray-400">Complete various tasks and earn</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-800 rounded-3xl p-6 hover:bg-slate-700 transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-primary-600/20 rounded-2xl">
+                    <Puzzle className="w-6 h-6 text-primary-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Extension</h3>
+                    <p className="text-gray-400">Redeem your coins in our browser add-on</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <Gamepad2 className="w-12 h-12 text-purple-600 mb-4" />
-            <h3 className="text-xl font-bold mb-2">Jouez et gagnez</h3>
-            <p className="text-gray-600">
-              Pile ou face, duels et caisses mystères. Multipliez vos gains en jouant avec vos coins.
-            </p>
-          </div>
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <Gift className="w-12 h-12 text-primary-600 mb-4" />
-            <h3 className="text-xl font-bold mb-2">Retirez vos gains</h3>
-            <p className="text-gray-600">
-              PayPal, Revolut ou cartes cadeaux. Retirez dès 2€ avec des paiements rapides.
-            </p>
+
+          {/* Right Sidebar - Info Cards */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Your Coins Card */}
+            <div className="bg-slate-800 rounded-3xl p-6">
+              <h2 className="text-lg font-semibold text-white mb-4">Your Coins</h2>
+              <div className="text-4xl font-bold text-white mb-4">3,200</div>
+              <div className="h-16 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-xl flex items-end p-2">
+                <div className="w-full h-8 bg-primary-500 rounded-lg opacity-80" style={{
+                  clipPath: 'polygon(0% 100%, 5% 80%, 10% 90%, 15% 70%, 20% 85%, 25% 60%, 30% 75%, 35% 55%, 40% 70%, 45% 50%, 50% 65%, 55% 45%, 60% 60%, 65% 40%, 70% 55%, 75% 35%, 80% 50%, 85% 30%, 90% 45%, 95% 25%, 100% 40%, 100% 100%)'
+                }}></div>
+              </div>
+            </div>
+
+            {/* CoinFlip Card */}
+            <div className="bg-slate-800 rounded-3xl p-6 hover:bg-slate-700 transition-colors cursor-pointer">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-lg font-semibold text-white">CoinFlip</h2>
+                <div className="p-2 bg-primary-600/20 rounded-xl">
+                  <TrendingUp className="w-5 h-5 text-primary-400" />
+                </div>
+              </div>
+              <p className="text-gray-400">Play for a chance to win more</p>
+            </div>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 border-t mt-20">
-        <div className="text-center text-gray-600">
-          <p>&copy; 2024 HeyCash+. Tous droits réservés.</p>
+      <footer className="container mx-auto px-4 py-8 border-t border-slate-700 mt-20">
+        <div className="text-center text-gray-400">
+          <p>&copy; 2024 Coinly. Tous droits réservés.</p>
         </div>
       </footer>
     </div>
   )
 }
-
-

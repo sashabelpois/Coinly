@@ -14,7 +14,10 @@ export default function AdminPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (!token) {
+    const mockUser = localStorage.getItem('mock_user')
+    
+    // Permettre l'accès si connecté ou en mode mock
+    if (!token && !mockUser) {
       router.push('/auth/login')
       return
     }
@@ -70,41 +73,41 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-purple-50 to-primary-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Dashboard Admin</h1>
+        <h1 className="text-3xl font-bold mb-8 text-white">Dashboard Admin</h1>
 
         {/* Stats */}
         {stats && (
           <div className="grid md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <p className="text-gray-600 mb-2">Utilisateurs</p>
-              <p className="text-3xl font-bold">{stats.totalUsers}</p>
+            <div className="bg-slate-800 rounded-3xl p-6 shadow-lg">
+              <p className="text-gray-400 mb-2">Utilisateurs</p>
+              <p className="text-3xl font-bold text-white">{stats.totalUsers}</p>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <p className="text-gray-600 mb-2">Retraits</p>
-              <p className="text-3xl font-bold">{stats.totalWithdrawals}</p>
+            <div className="bg-slate-800 rounded-3xl p-6 shadow-lg">
+              <p className="text-gray-400 mb-2">Retraits</p>
+              <p className="text-3xl font-bold text-white">{stats.totalWithdrawals}</p>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <p className="text-gray-600 mb-2">Conversions</p>
-              <p className="text-3xl font-bold">{stats.totalConversions}</p>
+            <div className="bg-slate-800 rounded-3xl p-6 shadow-lg">
+              <p className="text-gray-400 mb-2">Conversions</p>
+              <p className="text-3xl font-bold text-white">{stats.totalConversions}</p>
             </div>
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <p className="text-gray-600 mb-2">Revenus (coins)</p>
-              <p className="text-3xl font-bold">{stats.totalRevenueCoins?.toLocaleString()}</p>
+            <div className="bg-slate-800 rounded-3xl p-6 shadow-lg">
+              <p className="text-gray-400 mb-2">Revenus (coins)</p>
+              <p className="text-3xl font-bold text-white">{stats.totalRevenueCoins?.toLocaleString()}</p>
             </div>
           </div>
         )}
 
         {/* Pending Withdrawals */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Retraits en attente</h2>
+        <div className="bg-slate-800 rounded-3xl p-6 shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-white">Retraits en attente</h2>
           <div className="space-y-3">
             {withdrawals.map((withdrawal) => (
-              <div key={withdrawal.id} className="flex items-center justify-between p-4 border rounded-xl">
+              <div key={withdrawal.id} className="flex items-center justify-between p-4 bg-slate-700 border border-slate-600 rounded-xl">
                 <div>
-                  <p className="font-medium">{withdrawal.user.email}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="font-medium text-white">{withdrawal.user.email}</p>
+                  <p className="text-sm text-gray-400">
                     {withdrawal.amountEur}€ via {withdrawal.method}
                   </p>
                 </div>
@@ -126,7 +129,7 @@ export default function AdminPage() {
               </div>
             ))}
             {withdrawals.length === 0 && (
-              <p className="text-center text-gray-500 py-8">Aucun retrait en attente</p>
+              <p className="text-center text-gray-400 py-8">Aucun retrait en attente</p>
             )}
           </div>
         </div>
