@@ -21,6 +21,9 @@ export default function LoginPage() {
     try {
       const { data } = await api.post('/auth/login', { email, password })
       localStorage.setItem('token', data.access_token)
+      if (data.user) {
+        localStorage.setItem('userId', data.user.id)
+      }
       toast.success('Connexion réussie !')
       router.push('/earn')
     } catch (error: any) {

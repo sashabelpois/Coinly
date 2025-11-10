@@ -5,41 +5,6 @@ import { Coins, TrendingUp, Gamepad2, Gift, FileText, Video, CheckCircle, Puzzle
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <nav className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Coins className="w-8 h-8 text-primary-400" />
-            <span className="text-2xl font-bold text-white">
-              Coinly
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/earn" className="text-white hover:text-primary-400 transition-colors">
-              Earn
-            </Link>
-            <Link href="/games" className="text-white hover:text-primary-400 transition-colors">
-              Games
-            </Link>
-            <Link href="/wallet" className="text-white hover:text-primary-400 transition-colors">
-              Wallet
-            </Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/auth/login">
-              <Button variant="ghost" className="text-white hover:bg-slate-800">
-                Log in
-              </Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button className="bg-primary-600 hover:bg-primary-700 text-white">
-                Get Started
-              </Button>
-            </Link>
-          </div>
-        </nav>
-      </header>
-
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-3 gap-8">
@@ -52,11 +17,16 @@ export default function Home() {
               <p className="text-xl text-gray-300 max-w-2xl">
                 Make money by completing surveys, watching videos, playing games, and more.
               </p>
-              <Link href="/auth/register">
-                <Button size="lg" className="bg-primary-600 hover:bg-primary-700 text-white text-lg px-8 py-6 rounded-2xl">
-                  Get Started
-                </Button>
-              </Link>
+            <Link href="/auth/register">
+              <Button size="lg" className="bg-primary-600 hover:bg-primary-700 text-white text-lg px-8 py-6 rounded-2xl">
+                Get Started
+              </Button>
+            </Link>
+            <Link href="/earn">
+              <Button size="lg" variant="outline" className="text-white text-lg px-8 py-6 rounded-2xl border-slate-600 hover:bg-slate-800">
+                Voir les offres
+              </Button>
+            </Link>
             </div>
 
             {/* Feature Cards Grid */}

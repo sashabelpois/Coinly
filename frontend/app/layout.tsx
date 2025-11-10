@@ -4,6 +4,7 @@ import './globals.css'
 import { Providers } from './providers'
 import { Toaster } from 'sonner'
 import { DevAuthButton } from '@/components/dev/DevAuthButton'
+import { Header } from '@/components/layout/Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={inter.className}>
         <Providers>
+          <Header />
           {children}
           <Toaster position="top-right" />
           <DevAuthButton />

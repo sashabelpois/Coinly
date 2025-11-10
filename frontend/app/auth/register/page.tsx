@@ -22,6 +22,9 @@ export default function RegisterPage() {
     try {
       const { data } = await api.post('/auth/register', { email, password, name })
       localStorage.setItem('token', data.access_token)
+      if (data.user) {
+        localStorage.setItem('userId', data.user.id)
+      }
       toast.success('Inscription réussie !')
       router.push('/earn')
     } catch (error: any) {

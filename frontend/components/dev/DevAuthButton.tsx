@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { User, LogOut } from 'lucide-react'
 
 export function DevAuthButton() {
+  const router = useRouter()
   const [isDevMode, setIsDevMode] = useState(false)
   const [isMockLoggedIn, setIsMockLoggedIn] = useState(false)
 
@@ -32,7 +34,7 @@ export function DevAuthButton() {
     localStorage.setItem('token', mockToken)
     
     setIsMockLoggedIn(true)
-    window.location.reload()
+    router.push('/earn?section=featured')
   }
 
   const handleMockLogout = () => {
