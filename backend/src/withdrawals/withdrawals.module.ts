@@ -7,6 +7,8 @@ import { WalletModule } from '../wallet/wallet.module';
   imports: [WalletModule],
   providers: [WithdrawalsService],
   controllers: [WithdrawalsController],
+  exports: [WithdrawalsService],
 })
 export class WithdrawalsModule {}
+
 

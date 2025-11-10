@@ -35,7 +35,6 @@
     "@nestjs/swagger": "^7.1.17",
     "@nestjs/bullmq": "^10.0.1",
     "@prisma/client": "^5.7.1",
-    "@sentry/nestjs": "^7.91.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -45,7 +44,6 @@
     "bullmq": "^5.1.0",
     "ioredis": "^5.3.2",
     "socket.io": "^4.6.1",
-    "crypto": "^1.0.1",
     "express-rate-limit": "^7.1.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
@@ -94,4 +92,5 @@
     "testEnvironment": "node"
   }
 }
+
 

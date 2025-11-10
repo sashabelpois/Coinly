@@ -1,17 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { createClient, RedisClientType } from 'redis';
+import Redis from 'ioredis';
 
 @Injectable()
 export class RedisService {
-  private client: RedisClientType;
+  private client: Redis;
 
   constructor() {
     const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-    this.client = createClient({ url: redisUrl }) as RedisClientType;
-    this.client.connect().catch(console.error);
+    // Parse URL to avoid IPv6 issues
+    const url = new URL(redisUrl);
+    this.client = new Redis({
+      host: url.hostname,
+      port: parseInt(url.port) || 6379,
+      enableReadyCheck: false,
+      maxRetriesPerRequest: null,
+    });
   }
 
-  getClient(): RedisClientType {
+  getClient(): Redis {
     return this.client;
   }
 
@@ -21,7 +27,7 @@ export class RedisService {
 
   async set(key: string, value: string, ttl?: number): Promise<void> {
     if (ttl) {
-      await this.client.setEx(key, ttl, value);
+      await this.client.setex(key, ttl, value);
     } else {
       await this.client.set(key, value);
     }
@@ -31,4 +37,5 @@ export class RedisService {
     await this.client.del(key);
   }
 }
+
 

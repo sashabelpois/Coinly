@@ -41,3 +41,4 @@ gh repo create YOUR_REPO --public --source=. --remote=origin --push
 - Le fichier `.gitignore` est déjà configuré pour exclure les fichiers sensibles
 - Vérifiez que tous les secrets sont dans `.env.example` (sans valeurs réelles)
 
+

@@ -13,9 +13,9 @@ import { Server, Socket } from 'socket.io';
     credentials: true,
   },
 })
-export class WebSocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class WebSocketGatewayService implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  server: Server;
+  server!: Server;
 
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
@@ -34,4 +34,5 @@ export class WebSocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     this.server.to(room).emit('game-result', data);
   }
 }
+
 

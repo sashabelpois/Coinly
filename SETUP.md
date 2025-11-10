@@ -130,3 +130,4 @@ earnapp/
 - Exécutez `npm run prisma:generate` dans le conteneur backend
 - Vérifiez que les migrations sont appliquées : `npm run prisma:migrate`
 
+

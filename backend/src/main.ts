@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import * as Sentry from '@sentry/nestjs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -35,13 +34,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // Sentry
-  if (process.env.SENTRY_DSN) {
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      environment: process.env.NODE_ENV || 'development',
-    });
-  }
+  // Sentry (optionnel - décommenter si configuré)
+  // if (process.env.SENTRY_DSN) {
+  //   const Sentry = require('@sentry/nestjs');
+  //   Sentry.init({
+  //     dsn: process.env.SENTRY_DSN,
+  //     environment: process.env.NODE_ENV || 'development',
+  //   });
+  // }
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
@@ -50,4 +50,5 @@ async function bootstrap() {
 }
 
 bootstrap();
+
 

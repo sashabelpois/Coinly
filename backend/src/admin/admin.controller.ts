@@ -3,7 +3,6 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminService } from './admin.service';
 import { WithdrawalsService } from '../withdrawals/withdrawals.service';
-import { PrismaService } from '../prisma/prisma.service';
 
 @ApiTags('admin')
 @Controller('admin')
@@ -13,7 +12,6 @@ export class AdminController {
   constructor(
     private adminService: AdminService,
     private withdrawalsService: WithdrawalsService,
-    private prisma: PrismaService,
   ) {}
 
   @Get('users')
@@ -38,7 +36,7 @@ export class AdminController {
   @ApiOperation({ summary: 'Reject withdrawal (admin only)' })
   async rejectWithdrawal(@Param('id') id: string) {
     // Get withdrawal to get userId
-    const withdrawal = await this.prisma.withdrawal.findUnique({
+    const withdrawal = await this.adminService['prisma'].withdrawal.findUnique({
       where: { id },
     });
     if (!withdrawal) {

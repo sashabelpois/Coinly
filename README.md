@@ -4,42 +4,47 @@ Plateforme moderne et ludique permettant aux utilisateurs de gagner de l'argent 
 
 ## 🚀 Démarrage rapide
 
-### Prérequis
-- Docker & Docker Compose
-- Node.js 18+ (pour le développement local sans Docker)
-- Git (pour cloner le repository)
+### Méthode simple (Windows)
 
-### Installation
+1. **Installer Docker Desktop** : https://www.docker.com/products/docker-desktop/
 
-1. Cloner le repository
-```bash
-git clone <repo-url>
-cd earnapp
-```
+2. **Lancer le script automatique** :
+   ```cmd
+   start-local.bat
+   ```
 
-2. Créer les fichiers `.env` :
+3. **Initialiser la base de données** (dans un nouveau terminal) :
+   ```cmd
+   init-database.bat
+   ```
+
+4. **Accéder au site** : http://localhost:3000
+
+### Méthode manuelle
+
+1. **Créer les fichiers `.env`** :
    - `backend/.env` (copier depuis `backend/.env.example`)
    - `frontend/.env.local` (copier depuis `frontend/.env.example`)
 
-3. Lancer avec Docker Compose
-```bash
-docker compose up --build
-```
+2. **Lancer avec Docker** :
+   ```bash
+   docker compose up --build
+   ```
 
-4. Initialiser la base de données (dans un nouveau terminal)
-```bash
-docker exec -it heycash_backend sh
-npm run prisma:generate
-npm run prisma:migrate
-npm run prisma:seed
-```
+3. **Initialiser la base de données** (nouveau terminal) :
+   ```bash
+   docker exec -it heycash_backend sh
+   npm run prisma:generate
+   npm run prisma:migrate
+   npm run prisma:seed
+   ```
 
-5. Accéder à l'application
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:3001
-- Swagger: http://localhost:3001/api
+4. **Accéder à l'application** :
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001
+   - Swagger: http://localhost:3001/api
 
-📖 Pour plus de détails, voir [SETUP.md](./SETUP.md)
+📖 **Guide complet** : Voir [LANCER_LOCAL.md](./LANCER_LOCAL.md) pour les détails et le dépannage
 
 ### Développement local (sans Docker)
 
